@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilojuego.css">
+    <title>Juego 3 en Raya</title>
+    <script>
+        //Guarda el estado del tablero actual
+        var estado_tablero = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+        //Guarda el jugador que esta jugando. Inicializado al Jugador 1.
+        var jugador = 1;
+
+        function dibujar() {
+            for (i = 0; i < 9; i++) {
+                if (estado_tablero[i] == 0) document.getElementById("celda" + i).style = "background-color: white";
+                if (estado_tablero[i] == 1) document.getElementById("celda" + i).style = "background-color: red";
+                if (estado_tablero[i] == 2) document.getElementById("celda" + i).style = "background-color: blue";
+            }
+        }
+
+        function fcelda(celda) {
+            //estado = estado_tablero[celda];
+            //alert(estado);
+            if (estado_tablero[celda] == 0) {
+                if (jugador == 1) {
+                    estado_tablero[celda] = 1;
+                    jugador = 2;
+                } else {
+                    estado_tablero[celda] = 2;
+                    jugador = 1;
+                }
+            } else {
+                alert("No puedes pulsar sobre una celda coloreada");
+            }
+
+            dibujar();
+            //Posibles casos:
+            // -> 1 : Gana el Jugador 1
+            // -> 2 : Gana el Jugador 2
+            // -> 3 : Empate
+            // -> 0 : Se esta jugando
+            var estado = ganador();
+            mostrar_mensaje(estado);
+
+        }
+
+        function ganador() {
+            //Casillas sin usar
+            var numCeldasVacias = 0;
+            //Recorro la lista ordenada 'estado_tablero'
+            //estado_tablero = [x0, x1, x2, x3, x4, x5, x6, x7, x8];
+            for (i = 0; i < 9; i++) {
+                if (estado_tablero[i] == 0) numCeldasVacias = numCeldasVacias + 1; //numCeldasVacias++
+            }
+
+            // Si las 3 celdas son iguales, entonces devuelvo cualquiera de una de ellas. 
+            // Puede devolver '1' y '2' - [(Gana jugador 1), (Gana jugador 2)]
+
+            // Las líneas horizontales
+            if (estado_tablero[0] == estado_tablero[1] && estado_tablero[1] == estado_tablero[2] && estado_tablero[0] != 0) return estado_tablero[0];
+            if (estado_tablero[3] == estado_tablero[4] && estado_tablero[4] == estado_tablero[5] && estado_tablero[3] != 0) return estado_tablero[3];
+            if (estado_tablero[6] == estado_tablero[7] && estado_tablero[7] == estado_tablero[8] && estado_tablero[6] != 0) return estado_tablero[6];
+            //Las líneas verticales
+            if (estado_tablero[0] == estado_tablero[3] && estado_tablero[3] == estado_tablero[6] && estado_tablero[0] != 0) return estado_tablero[0];
+            if (estado_tablero[1] == estado_tablero[4] && estado_tablero[4] == estado_tablero[7] && estado_tablero[1] != 0) return estado_tablero[1];
+            if (estado_tablero[2] == estado_tablero[5] && estado_tablero[5] == estado_tablero[8] && estado_tablero[2] != 0) return estado_tablero[2];
+            //Las diagonales
+            if (estado_tablero[0] == estado_tablero[4] && estado_tablero[4] == estado_tablero[8] && estado_tablero[0] != 0) return estado_tablero[0];
+            if (estado_tablero[2] == estado_tablero[4] && estado_tablero[4] == estado_tablero[6] && estado_tablero[2] != 0) return estado_tablero[2];
+
+            // Puede devolver '0' y '3' - [(Desarollo del juego), (Empate)]
+            if (numCeldasVacias > 0) {
+                //ESTAMOS EN EL DESARROLLO DEL JUEGO: Quedan casillas disponibles
+                return 0;
+            } else {
+                //EMPATE: No quedan casillas.
+                return 3;
+            }
+        }
+
+        function mostrar_mensaje(estado) {
+            if (estado == 0) {
+                //Nada, que continue el juego
+            } else if (estado == 1) {
+                alert("¡Ganó el rojo!");
+            } else if (estado == 2) {
+                alert("¡Ganó el azul!");
+            } else if (estado == 3) {
+                alert("Empate");
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Juego 3 en Raya</h1>
+    <div class="contenedor">
+        <table>
+            <!-- FILA 1 -->
+            <tr>
+                <td id="celda0" onclick="fcelda(0)"></td>
+                <td id="celda1" onclick="fcelda(1)"></td>
+                <td id="celda2" onclick="fcelda(2)"></td>
+            </tr>
+            <!-- FILA 2 -->
+            <tr>
+                <td id="celda3" onclick="fcelda(3)"></td>
+                <td id="celda4" onclick="fcelda(4)"></td>
+                <td id="celda5" onclick="fcelda(5)"></td>
+            </tr>
+            <!-- FILA 3 -->
+            <tr>
+                <td id="celda6" onclick="fcelda(6)"></td>
+                <td id="celda7" onclick="fcelda(7)"></td>
+                <td id="celda8" onclick="fcelda(8)"></td>
+            </tr>
+        </table>
+        <div id='zona_botones'>
+            <a class="boton" href="javascript:location.reload()">Reiniciar</a>
+        </div>
+
+
+
+    </div>
+
+</body>
+
+</html>
